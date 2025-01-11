@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}?v=1">
+</head>
+<body>
+    <main>
+        <table border="0" cellspacing="0" cellpadding="0">
+            <tbody id="Table">
+                <!-- LEAVE EMPTY!!!!! FILLED BY SCRIPT-->
+            </tbody>
+        </table>
+    </main>
+    <script>
+        function generateField() {
+            var tableBody = document.getElementById('Table');
+                    for(var x = 0; x < 10; x++){
+                        var row = document.createElement('tr');
+                        for (var y = 0; y < 10; y++) {
+                            var tile = document.createElement('td');
+                            tile.innerHTML = `<button onclick="checkTile(${x}, ${y})"><img id='${x}${y}'></button>`;
+                            row.appendChild(tile);
+                            tableBody.appendChild(row);
+                            document.getElementById(`${x}${y}`).src=`static/images/TileUnknown.png`;
+                        }
+                    }
+        }
+
+        function checkTile(x, y) {
+            console.log(x, y)
+        }
+        document.onload = generateField();
+    </script>
+</body>
