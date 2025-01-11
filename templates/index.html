@@ -11,11 +11,11 @@
         </table>
     </main>
     <script>
-        function generateField() {
+        function generateField(size) {
             var tableBody = document.getElementById('Table');
-                    for(var x = 0; x < 10; x++){
+                    for(var x = 0; x < size; x++){
                         var row = document.createElement('tr');
-                        for (var y = 0; y < 10; y++) {
+                        for (var y = 0; y < size; y++) {
                             var tile = document.createElement('td');
                             tile.innerHTML = `<button onclick="checkTile(${x}, ${y})"><img id='${x}${y}'></button>`;
                             row.appendChild(tile);
@@ -27,7 +27,8 @@
 
         function checkTile(x, y) {
             console.log(x, y)
+            document.getElementById(`${x}${y}`).src=`static/images/TileEmpty.png`;
         }
-        document.onload = generateField();
+        document.onload = generateField(10);
     </script>
 </body>
