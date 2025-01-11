@@ -11,8 +11,11 @@
         </table>
     </main>
     <script>
+        var mines = [];
         function generateField(size) {
             var tableBody = document.getElementById('Table');
+            var numberOfMines = size;
+            mines = placeMines(size, numberOfMines);
                     for(var x = 0; x < size; x++){
                         var row = document.createElement('tr');
                         for (var y = 0; y < size; y++) {
@@ -25,9 +28,24 @@
                     }
         }
 
+        function placeMines(size, numberOfMines) {
+            var placedMines = new Set(); 
+            while (placedMines.size < numberOfMines) {
+                var x = Math.floor(Math.random() * size); 
+                var y = Math.floor(Math.random() * size); 
+                placedMines.add(`${x},${y}`);
+            }
+            return Array.from(placedMines).map(mine => mine.split(',').map(Number));
+        }
+
         function checkTile(x, y) {
-            console.log(x, y)
-            document.getElementById(`${x}${y}`).src=`static/images/TileEmpty.png`;
+            for(var i = 0; i < mines.length; i++){
+                if(mines[i][0] == x && mines[i][1] == y){
+                    document.getElementById(`${x}${y}`).src=`static/images/TileExploded.png`;
+                } else {
+                    document.getElementById(`${x}${y}`).src=`static/images/TileEmpty.png`;
+                }
+            }
         }
         document.onload = generateField(10);
     </script>
