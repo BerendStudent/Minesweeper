@@ -24,3 +24,10 @@ button {
 	outline: inherit;
     display: block;
 }
+
+#mode {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 10px;
+}
