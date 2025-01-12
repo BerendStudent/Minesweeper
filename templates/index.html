@@ -10,6 +10,7 @@
                 <!-- LEAVE EMPTY!!!!! FILLED BY SCRIPT-->
             </tbody>
         </table>
+        <p id="GameState">Click on the tiles to reveal them.</p>
     </main>
     <script>
         var mines = [];
@@ -71,12 +72,31 @@
                 } else {
                     document.getElementById(`${x}${y}`).src=`static/images/TileFlag.png`;
                     flagged.push([x, y]);
+                    if(flagged.length == mines.length){
+                        checkWin();
+                    }
                 }
+            }
+        }
+
+        function checkWin(){
+            var success;
+            for(var i = 0; i < flagged.length; i++){
+                for(var j = 0; j < mines.length; j++){
+                    if(mines[j][0] == flagged[i][0] && mines[j][1] == flagged[i][1]){
+                        success += 1;
+                    }
+                }
+            }
+            if(success == mines.length){
+                ended = 1;
+                document.getElementById(`GameState`).innerHTML=`VICTORY!`;
             }
         }
 
         function gameOver(){
             ended = 1;
+            document.getElementById(`GameState`).innerHTML=`GAME OVER`;
             for(var x = 0; x < gameSize; x++){
                 for(var y = 0; y < gameSize; y++){
                     if(checkMines(x,y)){
