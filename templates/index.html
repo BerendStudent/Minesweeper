@@ -59,8 +59,7 @@
         function checkTile(x, y) {
             if(mode == "tile"){
                 if(checkMines(x,y)){
-                    document.getElementById(`${x}${y}`).src=`static/images/TileExploded.png`;
-                    gameOver();
+                    gameOver(x,y);
                 } else {
                     document.getElementById(`${x}${y}`).src=`static/images/TileEmpty.png`;
                 }
@@ -94,14 +93,17 @@
             }
         }
 
-        function gameOver(){
+        function gameOver(fail_x, fail_y){
             ended = 1;
             document.getElementById(`GameState`).innerHTML=`GAME OVER`;
             for(var x = 0; x < gameSize; x++){
                 for(var y = 0; y < gameSize; y++){
-                    if(checkMines(x,y)){
-                        if(!checkFlags(x,y))
-                        document.getElementById(`${x}${y}`).src=`static/images/TileMine.png`;
+                    if(checkMines(x,y) && !checkFlags(x,y)){
+                        if(x == fail_x && y == fail_y){
+                            document.getElementById(`${x}${y}`).src=`static/images/TileExploded.png`;
+                        } else {
+                            document.getElementById(`${x}${y}`).src=`static/images/TileMine.png`;
+                        }
                     } 
                 }
             }
