@@ -28,10 +28,10 @@
                 var row = document.createElement('tr');
                 for (var y = 0; y < size; y++) {
                     var tile = document.createElement('td');
-                    tile.innerHTML = `<button onclick="handleClick(${x}, ${y})"><img id='${x}${y}'></button>`;
+                    tile.innerHTML = `<button onclick="handleClick(${x}, ${y})"><img id='${x} ${y}' src='static/images/TileUnknown.png'></button>`;
                     row.appendChild(tile);
                     tableBody.appendChild(row);
-                    document.getElementById(`${x}${y}`).src=`static/images/TileUnknown.png`;
+                    document.getElementById(`${x} ${y}`).src=`static/images/TileUnknown.png`;
                 }
             }
         }
@@ -61,15 +61,15 @@
                 if(checkMines(x,y)){
                     gameOver(x,y);
                 } else {
-                    document.getElementById(`${x}${y}`).src=`static/images/TileEmpty.png`;
+                    document.getElementById(`${x} ${y}`).src=`static/images/TileEmpty.png`;
                 }
             } else {
                 var flagLocation = checkFlags(x,y);
                 if(flagLocation){
-                    document.getElementById(`${x}${y}`).src=`static/images/TileUnknown.png`;
+                    document.getElementById(`${x} ${y}`).src=`static/images/TileUnknown.png`;
                     flagged.splice(flagLocation - 1, 1);
                 } else {
-                    document.getElementById(`${x}${y}`).src=`static/images/TileFlag.png`;
+                    document.getElementById(`${x} ${y}`).src=`static/images/TileFlag.png`;
                     flagged.push([x, y]);
                     if(flagged.length == mines.length){
                         checkWin();
@@ -100,9 +100,9 @@
                 for(var y = 0; y < gameSize; y++){
                     if(checkMines(x,y) && !checkFlags(x,y)){
                         if(x == fail_x && y == fail_y){
-                            document.getElementById(`${x}${y}`).src=`static/images/TileExploded.png`;
+                            document.getElementById(`${x} ${y}`).src=`static/images/TileExploded.png`;
                         } else {
-                            document.getElementById(`${x}${y}`).src=`static/images/TileMine.png`;
+                            document.getElementById(`${x} ${y}`).src=`static/images/TileMine.png`;
                         }
                     } 
                 }
@@ -132,6 +132,6 @@
             }
         }
 
-        document.onload = generateField(10);
+        document.onload = generateField(20);
     </script>
 </body>
