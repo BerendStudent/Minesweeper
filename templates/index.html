@@ -145,7 +145,7 @@
                         findClearing(x,y);
                     }
                 }
-            } else {
+            } else if(revealed[x][y] === false){
                 var flagLocation = checkFlags(x,y);
                 if(flagLocation){
                     document.getElementById(`${x} ${y}`).src=`static/images/TileUnknown.png`;
