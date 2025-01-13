@@ -4,6 +4,7 @@
 </head>
 <body>
     <main>
+        <p id="counter"></p>
         <button id="mode" onclick="changeMode()"><img id="img_mode" src = 'static/images/TileUnknown.png'></button>
         <table border="0" cellspacing="0" cellpadding="0">
             <tbody id="Table">
@@ -16,15 +17,18 @@
         var mines = [];
         var flagged = [];
         var numbers = [];
+        var revealed = [];
         var mode = "tile";
         var ended;
         var gameSize;
         function generateField(size) {
+            document.getElementById(`counter`).innerHTML=size;
             gameSize = size;
             var tableBody = document.getElementById('Table');
             var numberOfMines = size;
             mines = placeMines(size, numberOfMines);
             numbers = generateNumbers();
+            revealed = Array.from({ length: gameSize }, () => Array(gameSize).fill(false));
             for(var x = 0; x < size; x++){
                 var row = document.createElement('tr');
                 for (var y = 0; y < size; y++) {
@@ -41,20 +45,19 @@
             var Neighbours = new Set();
             for(var x = 0; x < gameSize; x++){
                 for(var y = 0; y < gameSize; y++){
-                    var n = getNumbers(x,y)
+                    var n = generateNumber(x,y)
                     Neighbours.add(`${x},${y},${n}`)
                 }
             }
             return Array.from(Neighbours).map(neighbour => neighbour.split(',').map(Number));
         }
 
-        function getNumbers(x,y){
+        function generateNumber(x,y){
             var check_x;
             var check_y;
             var foundMines = 0;
             for(var i = -1; i < 2; i++){
                 for(var j = -1; j < 2; j++){
-                    console.log(x,y);
                     check_x = Math.max(0, Math.min(x + i, gameSize)); // Ensures no over or underflow
                     check_y = Math.max(0, Math.min(y + j, gameSize));
                     if(checkMines(check_x,check_y)){
@@ -65,6 +68,49 @@
             return foundMines;
         }
 
+        function getTileNumber(x,y){
+            var number = 0;
+            for(var n = 0; n < numbers.length; n++){
+                if(numbers[n][0] == x && numbers[n][1] == y){
+                    number = numbers[n][2];
+                    break;
+                }
+            }
+            return number;
+        }
+
+        function findClearing(x, y) {
+            var currentNumber;
+            if(x < 0 || x >= gameSize || y < 0 || y >= gameSize){
+                return;
+            }
+            if(revealed[x][y] === true){
+                return;
+            }
+            revealed[x][y] = true;
+            currentNumber = getTileNumber(x,y);
+            if (checkFlags(x, y)){
+                return;
+            }
+            if(currentNumber){
+                document.getElementById(`${x} ${y}`).src=`static/images/Tile${currentNumber}.png`;
+            } else {
+                document.getElementById(`${x} ${y}`).src=`static/images/TileEmpty.png`;
+            }
+            if (getTileNumber(x, y) !== 0){
+                return;
+            }
+            findClearing(x - 1, y - 1);
+            findClearing(x - 1, y);
+            findClearing(x - 1, y + 1);
+            findClearing(x, y - 1);
+            findClearing(x, y + 1);    
+            findClearing(x + 1, y - 1); 
+            findClearing(x + 1, y);     
+            findClearing(x + 1, y + 1); 
+        }
+
+        
         function placeMines(size, numberOfMines) {
             var placedMines = new Set(); 
             while (placedMines.size < numberOfMines) {
@@ -91,15 +137,12 @@
                 if(checkMines(x,y)){
                     gameOver(x,y);
                 } else {
-                    for(var i = 0; i < numbers.length; i++){
-                        if(numbers[i][0] == x && numbers[i][1] == y){
-                            currentNumber = numbers[i][2]
-                        }
-                    }
+                    currentNumber = getTileNumber(x,y);
                     if(currentNumber){
                         document.getElementById(`${x} ${y}`).src=`static/images/Tile${currentNumber}.png`;
                     } else {
                         document.getElementById(`${x} ${y}`).src=`static/images/TileEmpty.png`;
+                        findClearing(x,y);
                     }
                 }
             } else {
@@ -111,9 +154,11 @@
                     document.getElementById(`${x} ${y}`).src=`static/images/TileFlag.png`;
                     flagged.push([x, y]);
                     if(flagged.length == mines.length){
+                        console.log(flagged.length);
                         checkWin();
                     }
                 }
+                document.getElementById(`counter`).innerHTML=gameSize - flagged.length;
             }
         }
 
@@ -165,7 +210,6 @@
         function checkFlags(x,y){
             for(var j = 0; j < flagged.length; j++){
                 if(flagged[j][0] == x && flagged[j][1] == y){
-                    console.log(j);
                     return j + 1;
                 }
             }
