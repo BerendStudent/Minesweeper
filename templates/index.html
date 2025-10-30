@@ -58,8 +58,11 @@
             var foundMines = 0;
             for(var i = -1; i < 2; i++){
                 for(var j = -1; j < 2; j++){
-                    check_x = Math.max(0, Math.min(x + i, gameSize)); // Ensures no over or underflow
-                    check_y = Math.max(0, Math.min(y + j, gameSize));
+                    check_x = x + i;
+                    check_y = y + j;
+                    if(check_x < 0 || check_y < 0 || check_x > gameSize || check_y > gameSize){
+                        continue
+                    }
                     if(checkMines(check_x,check_y)){
                         foundMines += 1;
                     }
